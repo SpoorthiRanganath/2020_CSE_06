@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Dog Classification</title>
+    </head>
+    <body>
+        <div style="margin: 30px auto; padding: 40px 40px 40px 40px;">
+            <h3>Upload an image</h3>
+            <form id = "uploadForm">
+                <input id = "image-upload" type="file" name="image" />
+                <button type="submit">Upload</button>
+            </form>
+            <p id = "status"></p>
+            <img id = "image_placeholder"></img>
+            <script type="text/javascript">
+                function uploadImage(e) {
+                   e.preventDefault()
+                   var imageFormElement = document.getElementById('image-upload').files[0]
+                   
+                   let request = new XMLHttpRequest();
+                   let formData = new FormData()
+
+                   formData.append("image", imageFormElement)
+
+                   request.onload = () => {
+                       var response = request.response
+                       if (response) {
+                           document.getElementById('status').innerText = "Success"
+                           document.getElementById('image_placeholder').setAttribute("src", "data:image/jpeg;base64, " + response)
+                       }
+                   }
+
+                   request.open("POST", "/api/infer")
+                   request.send(formData)
+                }
+    
+                window.onload = () => {
+                    document.getElementById('uploadForm').addEventListener("submit", uploadImage)
+                }
+            </script> 
+        </div>
+    </body>
+</html>
